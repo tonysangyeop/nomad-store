@@ -4,6 +4,7 @@ import Header from "../../components/Header";
 import Button from "../../components/Button";
 import { Layout, Input } from "antd";
 import ProductCard from "../../components/ProductCard";
+import CartButton from "../../components/CartButton";
 
 const { Content } = Layout;
 
@@ -15,7 +16,7 @@ export default ({ data, _updateSearchTerm, searchTerm }) => (
         <Header
             centerColumn={<h4>{searchTerm === "" ? "Search" : `Searching by ${searchTerm}` }</h4>}
             rightColumn={
-                <Button href="/cart" text="Cart" btnIcon={"shopping-cart"} />
+                <CartButton />
             }
             leftColumn={<Button href="/" text="Home" btnIcon={"search"} />}
         />
