@@ -1,3 +1,3 @@
-import { Container } from "./indexContainer";
+import Container from "./indexContainer";
 
 export default Container; 
