@@ -3,6 +3,7 @@ import App, { Container } from "next/app";
 import React from "react";
 import { ApolloProvider } from "react-apollo";
 import withApollo from "../lib/withApollo";
+import convertDataURIToBinary from "../lib/base64";
 // import NProgress from "next-nprogress/component";
 // import withNProgress from "next-nprogress";
 
@@ -20,10 +21,30 @@ class MyApp extends App {
     }
 
     componentDidMount () {
-        if("serviceWorker" in navigator){
+        if ("serviceWorker" in navigator && "PushManager" in window){
             navigator.serviceWorker
             .register("/sw.js")
-            .then(result => console.log("SW Registered: ", result))
+                .then(swReg => {
+                    console.log("SW Registered: ", swReg);
+                    swReg.pushManager.getSubscription().then(subscription => {
+                        if( subscription === null ){
+                            Notification.requestPermission().then(permission => {
+                                if (permission === "granted") {
+                                    swReg.pushManager.subscribe({
+                                        userVisibleOnly: true,
+                                        applicationServerKey: convertDataURIToBinary("BKWZfm-p1_kEQtVPa2LUM0nfn2n8Jo02PQp6Z45rgGRq3hheTWnZy-eb_qAPaGR_zgywslv9Gcvl3nz6gl1o4JA")
+                                    }).then(pushSubscriptionObject => {
+                                        console.log(JSON.stringify(pushSubscriptionObject));
+                                        // prompt("", JSON.stringify(pushSubscriptionObject))
+                                    })
+                                }
+                            })
+                        } else {
+                            console.log(JSON.stringify(subscription));
+                            // prompt("", JSON.stringify(subscription));
+                        }
+                    })
+                })
             .catch(error => console.log("Can't register SW: ", error))
         }
     }
